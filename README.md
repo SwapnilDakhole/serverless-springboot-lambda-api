@@ -1,9 +1,8 @@
 
----
 
-# Serverless Spring Boot API with AWS Lambda
+# Spring Boot AWS Lambda Employee Management System
 
-This project demonstrates a Spring Boot application integrated with AWS Lambda to build a serverless API. The application manages employee and course data, stores records in a MySQL database, and utilizes AWS Lambda to serve HTTP requests.
+This repository contains a Spring Boot application deployed as an AWS Lambda function, providing an employee management system. The application is built with Spring Boot, Spring Data JPA, and MySQL, integrated with AWS services to offer a serverless architecture.
 
 ## Table of Contents
 - [Features](#features)
@@ -11,77 +10,76 @@ This project demonstrates a Spring Boot application integrated with AWS Lambda t
 - [Configuration](#configuration)
 - [Setup](#setup)
 - [Endpoints](#endpoints)
-- [Deployment](#deployment)
 
 ## Features
-- Serverless architecture using AWS Lambda.
-- CRUD operations for Course and Employee entities.
-- MySQL database integration with Spring Data JPA.
-- Lightweight and scalable API with Spring Boot 3.
-- Fully managed serverless container using AWS.
+- Manage course data (CRUD operations).
+- AWS Lambda integration for serverless deployment.
+- MySQL database for persistent course information.
+- REST API endpoints for interacting with the course data.
+- Spring Data JPA for seamless database operations.
 
 ## Technologies
-- **Java**: 17
+- **Java**: 17 or higher
 - **Spring Boot**: 3.2.6
-- **Spring Data JPA**: For database interaction
-- **AWS Lambda**: For serverless execution
-- **AWS API Gateway**: For routing API requests
-- **MySQL**: As the database for storing data
-- **Maven**: For project build and dependencies management
+- **Spring Data JPA**: For data persistence
+- **MySQL**: Database for course data
+- **AWS Lambda**: Serverless architecture
+- **AWS RDS**: MySQL database hosted on AWS
 - **Lombok**: For reducing boilerplate code
 
 ## Configuration
-The application uses `application.properties` for database configuration and logging. You can modify these properties based on your AWS setup and database credentials.
+The application can be configured through the `application.properties` file:
 
 ```properties
-# MySQL Database Configuration
-spring.datasource.url=jdbc:mysql://your-db-endpoint.amazonaws.com:3306/employee
-spring.datasource.username=admin
-spring.datasource.password=your_password
-
-# Hibernate settings
+spring.datasource.url=jdbc:mysql://<your-rds-endpoint>:3306/employee
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.username=<your-username>
+spring.datasource.password=<your-password>
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
-
-# Logging
-logging.level.root=WARN
 ```
 
+For AWS Lambda deployment, ensure you configure your AWS credentials appropriately.
+
 ## Setup
+
+### Prerequisites
+- Java 17+
+- Maven
+- AWS CLI configured with appropriate access
+- MySQL database instance (preferably hosted on AWS RDS)
+
+### Steps to Run Locally
 1. Clone the repository:
-    ```bash
-    git clone https://github.com/your-username/serverless-springboot-lambda-api.git
-    cd serverless-springboot-lambda-api
-    ```
+   ```bash
+   git clone https://github.com/yourusername/springboot-lambda-employee-management.git
+   ```
+2. Update the `application.properties` with your MySQL database credentials.
+3. Build the application:
+   ```bash
+   mvn clean package
+   ```
+4. Run the application locally:
+   ```bash
+   mvn spring-boot:run
+   ```
 
-2. Configure your database connection in `src/main/resources/application.properties`.
-
-3. Build the project using Maven:
-    ```bash
-    mvn clean install
-    ```
-
-4. Deploy to AWS Lambda using your preferred deployment method (e.g., AWS Console, AWS SAM, or AWS CLI).
+### Steps to Deploy on AWS Lambda
+1. Build the shaded JAR for AWS Lambda:
+   ```bash
+   mvn package -Pshaded-jar
+   ```
+2. Use the AWS CLI or AWS Management Console to upload the generated JAR to AWS Lambda.
+3. Set up your Lambda function's handler to `org.example.StreamLambdaHandler`.
 
 ## Endpoints
 
-### Courses API
-- **POST** `/courses` - Add a new course
-- **GET** `/courses` - Get all courses
-- **GET** `/courses/{id}` - Get course by ID
-- **PUT** `/courses/{id}` - Update course by ID
-- **DELETE** `/courses/{id}` - Delete course by ID
+### Base URL
+The base URL is dependent on the AWS API Gateway (if used) or the local environment (e.g., `http://localhost:8080`).
 
-### Employees API (similar structure for employees)
-
-## Deployment
-To deploy the project on AWS Lambda, use the `StreamLambdaHandler` class provided in the project. Ensure you package the application correctly with the necessary dependencies using the Maven Shade plugin.
-
-```bash
-mvn package -Pshaded-jar
-```
-
-You can then upload the JAR file to AWS Lambda and configure the API Gateway for routing.
-
----
-
+### Available Endpoints
+- `POST /courses` - Add a new course
+- `GET /courses` - Retrieve all courses
+- `GET /courses/{id}` - Retrieve a course by its ID
+- `PUT /courses/{id}` - Update an existing course
+- `DELETE /courses/{id}` - Delete a course by ID
