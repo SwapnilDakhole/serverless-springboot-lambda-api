@@ -1,6 +1,6 @@
 
 
-# Spring Boot AWS Lambda Employee Management System
+# Serverless Spring Boot API with AWS Lambda
 
 This repository contains a Spring Boot application deployed as an AWS Lambda function, providing an employee management system. The application is built with Spring Boot, Spring Data JPA, and MySQL, integrated with AWS services to offer a serverless architecture.
 
